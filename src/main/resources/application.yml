@@ -1,0 +1,67 @@
+quarkus:
+  native:
+    builder-image=quay: "io/quarkus/ubi-quarkus-mandrel-builder-image:jdk-21"
+
+  vertx:
+    prefer-native-transport: true
+  resteasy:
+    gzip:
+      enabled: true
+  cache:
+    caffeine:
+      FILE_CONTENT:
+        expire-after-write: 600S
+
+  # Database config
+  datasource:
+    db-kind: postgresql
+    username:
+    password:
+    reactive:
+      url:
+
+
+  # Configure embedded authentication
+  # basic embedded authentication is used because this is a simple application that doesn't even need a database to
+  # back it up, if you are going to use this for production, you can check configure quarkus properties to use more
+  # secure authentication like OIDC, or OAUTH2, or at least configure it to use SSL connection.
+  http:
+    auth:
+      basic: true
+      policy:
+        authenticate-all:
+          roles: [READER,WRITER]
+      permission:
+        authenticate-all:
+          paths: [/*]
+          policy: authenticated
+  # enable this section to make accessing /sql public
+  #        public-read:
+  #          paths: [/sql/*]
+  #          methods: GET
+  #          policy: permit
+
+  # configuration of SSL , check https://quarkus.io/guides/http-reference#ssl
+  #    ssl:
+  #      certificate:
+  #        file: /path/to/certificate
+  #        key-file: /path/to/key
+
+  security:
+    users:
+      embedded:
+        enabled: true
+        plain-text: false
+        realm-name: sql-runner
+        #password should be hashed using MD-5 while being written in the following format
+        #username:realm-name:password
+        # ex: test-admin:sql-runner:d0ntUseTh1s  --MD5--> 25f61dc934a8f440c85818320eb93d86
+        #please change the default password if you need any security at all!
+        users:
+        roles:
+          test-admin: [READER,WRITER]
+
+org:
+  galal:
+    sql_runner:
+      directory: "src/test/resources/sql"

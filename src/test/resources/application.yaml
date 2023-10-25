@@ -1,0 +1,28 @@
+# Database config
+quarkus:
+  datasource:
+    db-kind: postgresql
+    username: quarkus_test
+    password: quarkus_test
+    reactive:
+      url: "postgresql://localhost:5432/quarkus_test"
+
+  security:
+    users:
+      embedded:
+        enabled: true
+        plain-text: false
+        realm-name: sql-runner
+        #password should be hashed using MD-5 while being written in the following format
+        #username:realm-name:password
+        # ex: test-admin:sql-runner:d0ntUseTh1s  --MD5--> 25f61dc934a8f440c85818320eb93d86
+        #please change the default password if you need any security at all!
+        users:
+          test-admin: 25f61dc934a8f440c85818320eb93d86
+        roles:
+          test-admin: [ READER,WRITER ]
+
+org:
+  galal:
+    sql_runner:
+      directory: "src/test/resources/sql"
