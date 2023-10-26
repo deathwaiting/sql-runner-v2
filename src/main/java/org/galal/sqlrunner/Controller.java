@@ -29,7 +29,7 @@ public class Controller {
     EventBus bus;
 
     @GET
-    @Path("/{file}")
+    @Path("/run/{file}")
     @RunOnVirtualThread
     public String runSql(@PathParam("file") String file, RoutingContext context) {
         var queryParams =
