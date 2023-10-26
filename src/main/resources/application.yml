@@ -1,6 +1,6 @@
 quarkus:
   native:
-    builder-image=quay: "io/quarkus/ubi-quarkus-mandrel-builder-image:jdk-21"
+    builder-image: "quay:io/quarkus/ubi-quarkus-mandrel-builder-image:jdk-21"
 
   vertx:
     prefer-native-transport: true
