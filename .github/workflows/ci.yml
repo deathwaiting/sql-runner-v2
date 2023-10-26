@@ -20,6 +20,8 @@ jobs:
           distribution: 'temurin'
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
       - name: Build
         run: ./gradlew build --info --scan -Dquarkus.package.type=native -Dquarkus.native.container-build=true
       - name: Upload build reports
