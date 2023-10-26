@@ -1,0 +1,5 @@
+name: sql-runner-v2
+packages:
+  - path: org.galal.sqlrunner
+language: java
+appmap_dir: tmp/appmap
