@@ -1,12 +1,12 @@
 ## This is basic continuous integration build for your Quarkus application.
 
-name: Quarkus Codestart CI
+name: SQL Runner Native Build
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
   build:
