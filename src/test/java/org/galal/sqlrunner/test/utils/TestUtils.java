@@ -1,4 +1,4 @@
-package org.galal.sqlrunner.test;
+package org.galal.sqlrunner.test.utils;
 
 import com.google.common.io.Resources;
 import org.jboss.logging.Logger;

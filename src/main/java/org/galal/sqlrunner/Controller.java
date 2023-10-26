@@ -1,8 +1,8 @@
 package org.galal.sqlrunner;
 
+import io.smallrye.common.annotation.RunOnVirtualThread;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.mutiny.core.eventbus.EventBus;
-import io.vertx.mutiny.core.eventbus.Message;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -30,19 +30,20 @@ public class Controller {
 
     @GET
     @Path("/{file}")
+    @RunOnVirtualThread
     public String runSql(@PathParam("file") String file, RoutingContext context) {
         var queryParams =
                 stream(context.queryParams().spliterator(), false)
                         .collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
         var msg = new SqlFilePathMsg(file, queryParams);
-        return bus
-                .request(EXECUTE_SQL, msg)
-                .map(Message::body)
-                .map(Object::toString)
-                .onItem()
-                .invoke(res -> LOG.debug("Returning Query result!"))
-                .onFailure()
-                .invoke(e -> LOG.error(format("Failed to run sql file [%s]!", file), e))
-                .await().indefinitely();
+
+        try {
+            var result = bus.requestAndAwait(EXECUTE_SQL, msg).body().toString();
+            LOG.debug("Returning Query result!");
+            return result;
+        } catch (Exception e) {
+            LOG.error(format("Failed to run sql file [%s]!", file), e);
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -2,6 +2,7 @@ package org.galal.sqlrunner.services.verticles;
 
 import io.quarkus.runtime.StartupEvent;
 import io.quarkus.vertx.ConsumeEvent;
+import io.smallrye.common.annotation.RunOnVirtualThread;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.event.Observes;
 import jakarta.inject.Inject;
@@ -42,6 +43,7 @@ public class FileServerVerticle {
 
 
     @ConsumeEvent(GET_FILE)
+    @RunOnVirtualThread
     public String readFile(String filePathMessage){
          var path = Path.of(directoryPath).resolve(filePathMessage);
          return fileReader.readFileFromPath(path.toString());

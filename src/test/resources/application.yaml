@@ -4,8 +4,10 @@ quarkus:
     db-kind: postgresql
     username: quarkus_test
     password: quarkus_test
-    reactive:
-      url: "postgresql://localhost:5432/quarkus_test"
+
+    #if no url is provided, quarkus will run a container for the DB
+    #reactive:
+    # url: "postgresql://localhost:5432/quarkus_test"
 
   security:
     users:

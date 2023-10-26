@@ -5,19 +5,18 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class PgNamedParamTest {
     private final String QUERY = """
             SELECT * FROM CATS
-            WHERE id = :id AND cute_level = :level
+            WHERE id = :id AND cute_level = :level AND time = TIMESTAMP '2020-11-30 20:00:00Z'
             """;
 
     private final String EXPECTED = """
             SELECT * FROM CATS
-            WHERE id = $1 AND cute_level = $2
+            WHERE id = $1 AND cute_level = $2 AND time = TIMESTAMP '2020-11-30 20:00:00Z'
             """;
 
     @Test

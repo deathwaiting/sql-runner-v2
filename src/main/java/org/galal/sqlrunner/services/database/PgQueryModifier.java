@@ -22,7 +22,7 @@ public class PgQueryModifier {
         var counter = new AtomicInteger(0);
         for(var param: extractNamedParams(query)) {
             var value = ofNullable(params.get(param.name()))
-                    .orElseThrow(() -> new IllegalStateException("Missing value for paramter: " + param.name()));
+                            .orElseThrow(() -> new IllegalStateException("Missing value for paramter: " + param.name()));
             values.add(value);
             var index = counter.incrementAndGet();
             modifiedQuery = modifiedQuery.replace(":" + param.name(), "$" + index);
@@ -33,8 +33,9 @@ public class PgQueryModifier {
 
 
     private static List<NamedParam> extractNamedParams(String query) {
-        var pattern = Pattern.compile("(:\\w+)");
-        var matcher = pattern.matcher(query);
+        var withNoLaterals = query.replaceAll("('.+')", "");
+        var pattern = Pattern.compile("(?<!')(:[A-Za-z]+\\w+)(?!')");
+        var matcher = pattern.matcher(withNoLaterals.toLowerCase());
         List<NamedParam> params = new ArrayList<>();
         while (matcher.find()) {
             int start = matcher.start();

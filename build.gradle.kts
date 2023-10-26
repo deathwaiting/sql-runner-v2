@@ -28,6 +28,7 @@ dependencies {
     implementation("io.quarkus:quarkus-resteasy-reactive")
     implementation("io.quarkus:quarkus-cache")
     implementation ("io.quarkus:quarkus-elytron-security")
+    implementation ("io.quarkus:quarkus-elytron-security-properties-file")
 
     testImplementation("io.quarkus:quarkus-junit5")
     testImplementation("io.rest-assured:rest-assured")
