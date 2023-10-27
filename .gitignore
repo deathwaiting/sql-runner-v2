@@ -37,3 +37,10 @@ nb-configuration.xml
 
 # Plugin directory
 /.quarkus/cli/plugins/
+
+
+# AppMap artifacts
+/.appmap
+
+# Node modules
+/node_modules
