@@ -22,8 +22,10 @@ jobs:
         uses: gradle/gradle-build-action@v2
       - name: Make gradlew executable
         run: chmod +x ./gradlew
+      - name: Test
+        run: ./gradlew test
       - name: Build
-        run: ./gradlew build --info --scan -Dquarkus.package.type=native -Dquarkus.native.container-build=true
+        run: ./gradlew build -x test --info --scan -Dquarkus.package.type=native -Dquarkus.native.container-build=true
       - name: Upload build reports
         uses: actions/upload-artifact@v3
         if: success() || failure()
