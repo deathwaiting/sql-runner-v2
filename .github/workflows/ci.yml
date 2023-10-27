@@ -2,17 +2,39 @@
 
 name: SQL Runner Native Build
 
+permissions:
+  # Read the baseline artifact in order to perform
+  # the AppMap comparison.
+  actions: read
+
+  # Commit the AppMap configuration.
+  # If the EndBug/add-and-commit is removed,
+  # this can be changed to 'read'.
+  contents: write
+
+  # Add check annotations to the source code when
+  # a problem is detected.
+  checks: write
+
+  # Add a comment to the pull request.
+  pull-requests: write
+
 on:
   push:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+  schedule:
+    - cron: '0 0 * * 0'
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Checkout pull request head so that a commit can be made
+          ref: ${{ github.event.pull_request.head.ref }}
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
@@ -22,8 +44,26 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
+      # Begin install-action snippet
+      #
+      - name: Install AppMap tools
+        id: install-appmap
+        uses: getappmap/install-action@v1
+        with:
+          project-type: gradle
+          build-patch-file: false
+      - name: Commit changes
+        uses: EndBug/add-and-commit@v9
+      #
+      # End install-action snippet
+
       - name: Test
         run: ./gradlew test
+
+      - name: Archive AppMaps
+        uses: getappmap/archive-action@v1
+        with:
+          revision: ${{ github.event.pull_request.base.sha }}
 
       - name: Build
         run: ./gradlew build -x test --info --scan -Dquarkus.package.type=native -Dquarkus.native.container-build=true
