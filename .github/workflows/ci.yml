@@ -31,7 +31,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           # Checkout pull request head so that a commit can be made
           ref: ${{ github.event.pull_request.head.ref }}
@@ -40,8 +40,7 @@ jobs:
         with:
           java-version: 21
           distribution: 'temurin'
-      - name: Setup Gradle
-        uses: gradle/gradle-build-action@v2
+
       - name: Make gradlew executable
         run: chmod +x ./gradlew
       # Begin install-action snippet
