@@ -35,10 +35,10 @@ jobs:
         with:
           # Checkout pull request head so that a commit can be made
           ref: ${{ github.event.pull_request.head.ref }}
-      - name: Set up JDK 21
+      - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
-          java-version: 21
+          java-version: 17
           distribution: 'temurin'
 
       - name: Make gradlew executable

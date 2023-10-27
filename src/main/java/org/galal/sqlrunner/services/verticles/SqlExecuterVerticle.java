@@ -1,7 +1,7 @@
 package org.galal.sqlrunner.services.verticles;
 
 import io.quarkus.vertx.ConsumeEvent;
-import io.smallrye.common.annotation.RunOnVirtualThread;
+import io.smallrye.common.annotation.Blocking;
 import io.vertx.mutiny.core.eventbus.EventBus;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -23,7 +23,7 @@ public class SqlExecuterVerticle {
     ReactiveSqlDbClient reactiveDbClient;
 
     @ConsumeEvent(value = EXECUTE_SQL, blocking = true)
-    @RunOnVirtualThread
+    @Blocking
     public String executeSql(SqlFilePathMsg msg){
         try {
             var sql = bus.requestAndAwait(GET_FILE, msg.file()).body().toString();
