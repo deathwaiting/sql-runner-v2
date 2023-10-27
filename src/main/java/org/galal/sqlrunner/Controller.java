@@ -1,6 +1,6 @@
 package org.galal.sqlrunner;
 
-import io.smallrye.common.annotation.RunOnVirtualThread;
+import io.smallrye.common.annotation.Blocking;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.mutiny.core.eventbus.EventBus;
 import jakarta.inject.Inject;
@@ -30,7 +30,7 @@ public class Controller {
 
     @GET
     @Path("/{file}")
-    @RunOnVirtualThread
+    @Blocking
     public String runSql(@PathParam("file") String file, RoutingContext context) {
         var queryParams =
                 stream(context.queryParams().spliterator(), false)
