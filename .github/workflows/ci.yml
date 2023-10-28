@@ -58,7 +58,7 @@ jobs:
       # End install-action snippet
 
       - name: Test
-        run: ./gradlew test
+        run: ./gradlew --rerun-tasks appmap test
 
       - name: Archive AppMaps
         uses: getappmap/archive-action@v1
