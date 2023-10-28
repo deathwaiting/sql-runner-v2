@@ -29,7 +29,7 @@ public class Controller {
     EventBus bus;
 
     @GET
-    @Path("/{file}")
+    @Path("/get/{file}")
     @Blocking
     public String runSql(@PathParam("file") String file, RoutingContext context) {
         var queryParams =
