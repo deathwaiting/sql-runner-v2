@@ -2,11 +2,30 @@
 
 name: SQL Runner Native Build
 
+permissions:
+  # Read the baseline artifact in order to perform
+  # the AppMap comparison.
+  actions: read
+
+  # Commit the AppMap configuration.
+  # If the EndBug/add-and-commit is removed,
+  # this can be changed to 'read'.
+  contents: write
+
+  # Add check annotations to the source code when
+  # a problem is detected.
+  checks: write
+
+  # Add a comment to the pull request.
+  pull-requests: write
+
 on:
   push:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+  schedule:
+    - cron: '0 0 * * 0'
 
 jobs:
   build:
@@ -23,7 +42,14 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Test
-        run: ./gradlew test
+        run: ./gradlew --rerun-tasks appmap test
+
+      - name: Save AppMaps
+        uses: actions/cache/save@v3
+        if: always()
+        with:
+          path: ./tmp/appmap
+          key: appmaps-${{ github.sha }}-${{ github.run_attempt }}
 
       - name: Build
         run: ./gradlew build -x test --info --scan -Dquarkus.package.type=native -Dquarkus.native.container-build=true
@@ -33,3 +59,14 @@ jobs:
         with:
           name: build-reports
           path: build/reports/
+
+  appmap-analysis:
+    if: always()
+    needs: [ test ] # You may need to change this to match
+    # the name of the step that runs your tests.
+    uses: getappmap/analyze-action/.github/workflows/appmap-analysis.yml@v1
+    permissions:
+      actions: read
+      contents: read
+      checks: write
+      pull-requests: write
